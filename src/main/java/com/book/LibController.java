@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -49,10 +50,16 @@ public class LibController {
 	@PostMapping("/books")
 	private int saveBook(@RequestBody Books books) 
 	{
-	booksService.saveOrUpdate(books);
-	return books.getBookid();
+		booksService.saveOrUpdate(books);
+		return books.getBookid();
 	}
-	
+	// update a books
+	@PutMapping("/books/{bookid}")
+	private int updBook(@RequestBody Books books, @PathVariable int bookid) 
+	{
+		booksService.update(books, bookid);
+		return books.getBookid();
+	}
 	
 	//Testing methods, the data is persistent within memory only
 	@RequestMapping(method=RequestMethod.GET, path="/lib/hello")

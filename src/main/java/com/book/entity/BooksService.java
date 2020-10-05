@@ -32,8 +32,10 @@ public class BooksService {
 	booksRepository.deleteById(id);  
 	}  
 	//updating a record  
-	public void update(Books books, int bookid)   
-	{  
-	booksRepository.save(books);  
-	}  
+	public void update(Books books, int bookid)   //, int bookid
+	{   Books bk =booksRepository.findById(bookid).get();
+		bk = books;
+		booksRepository.save(bk); 
+		//booksRepository.
+	}
 }
