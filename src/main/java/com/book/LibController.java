@@ -27,6 +27,7 @@ public class LibController {
 	@Autowired  
 	BooksService booksService;  
 	
+	// this set of API is data persistent with H2 Database
 	@GetMapping("/book")
 	private List<Books> getAllBooks() 
 	{
@@ -53,14 +54,13 @@ public class LibController {
 	}
 	
 	
-	//Testing method
+	//Testing methods, the data is persistent within memory only
 	@RequestMapping(method=RequestMethod.GET, path="/lib/hello")
 	public String helloWorld()  
 	{  
 		logger.info("this is lib/hello operation!!");
 		return "this is hello operation!!";  
 	}
-	
 	// list all books in library
 	@RequestMapping(method=RequestMethod.GET, path="/lib/books")
 	public List<Book> listAll()  
@@ -75,7 +75,6 @@ public class LibController {
 		logger.info("this is findOneBook operation on ISBN:"+isbn);
 		return service.findOneBook(isbn);  
 	}
-	
 	// create a new books in library
 	@RequestMapping(method=RequestMethod.POST, path="/lib/books")
 	public Book newBook(@RequestBody Book ab) throws Exception  
@@ -83,7 +82,6 @@ public class LibController {
 		logger.info("this is lcreatation operation!!");
 		return service.addBook(ab);  
 	}
-	
 	// delete a book by ISBN
 	@RequestMapping(method=RequestMethod.DELETE, path="/lib/books/isbn/{isbn}")
 	public Book deleteBook(@PathVariable String isbn) throws Exception  
@@ -91,7 +89,6 @@ public class LibController {
 		logger.info("this is deletition operation on ISBN:"+isbn);
 		return service.deleteBook(isbn);  
 	}
-	
 	// update a book by ISBN
 	@RequestMapping(method=RequestMethod.PUT, path="/lib/books")
 	public Book updateBook(@RequestBody Book upd) throws Exception  
