@@ -25,14 +25,13 @@ public class ServiceInterceptor implements HandlerInterceptor {
 	   @Override
 	   public void postHandle(HttpServletRequest request, HttpServletResponse response, 
 	      Object handler, ModelAndView modelAndView) throws Exception {
-	      
-	      logger.info("Post Handle method is Called");
+		  // response.enti
+	      //logger.info("Post Handle method is Called");
 	   }
 	   @Override
 	   public void afterCompletion
 	      (HttpServletRequest request, HttpServletResponse response, Object 
-	      handler, Exception exception) throws Exception {
-	      
-		   logger.info("Request and Response is completed");
+	      handler, Exception exception) throws Exception {	      
+		  //logger.info("Request and Response is completed");
 	   }
 }

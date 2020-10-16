@@ -17,7 +17,8 @@ import com.book.entity.Book;
 import com.book.entity.Books;
 import com.book.entity.BooksService;
 import com.book.entity.LibraryService;
-
+import com.book.jms.JmsProducer;
+import com.book.jms.MessageStorage;
 
 @RestController
 public class LibController {
@@ -27,30 +28,38 @@ public class LibController {
 	private LibraryService service;  	
 	@Autowired  
 	BooksService booksService;  
+	@Autowired
+	JmsProducer jmsProducer;
+	@Autowired
+	private MessageStorage bookStorage;
 	
-	// this set of API is data persistent with H2 Database
+	// this set of API is data persistent in memory, entity: Book
 	@GetMapping("/book")
 	private List<Books> getAllBooks() 
 	{
-	return booksService.getAllBooks();
-	}
+		return booksService.getAllBooks();
+	}	
 	//creating a get mapping that retrieves the detail of a specific book
 	@GetMapping("/book/{bookid}")
 	private Books getBooks(@PathVariable("bookid") int bookid) 
 	{
-	return booksService.getBooksById(bookid);
+		return booksService.getBooksById(bookid);
 	}
 	//creating a delete mapping that deletes a specified book
 	@DeleteMapping("/book/{bookid}")
 	private void deleteBook(@PathVariable("bookid") int bookid) 
 	{
-	booksService.delete(bookid);
+		booksService.delete(bookid);
 	}
-	//creating post mapping that post the book detail in the database
+	
+	/* this set of API is data persistent with H2 Database
+	creating post mapping that post the book detail in the database
+	*/
 	@PostMapping("/books")
 	private int saveBook(@RequestBody Books books) 
 	{
 		booksService.saveOrUpdate(books);
+		jmsProducer.send(books);	// testing ActiveMq publish message
 		return books.getBookid();
 	}
 	// update a books
@@ -102,5 +111,20 @@ public class LibController {
 	{  
 		logger.info("this is update operation:"+upd);
 		return service.updateBook(upd);  
+	}
+	
+	// another POST with input of string, as well as return string
+	@RequestMapping(method=RequestMethod.POST, path="/findstr/{st}")
+	public String findString(@PathVariable String st) throws Exception  
+	{  
+		logger.info("this is findstr operation!! "+st);
+		return st+"++answers";
+	}
+		
+	// testing ActiveMq, check receiver message
+	@GetMapping("/bookjms")
+	private List<Books> getAllJmsBooks() 
+	{
+		return bookStorage.getAll();
 	}
 }
